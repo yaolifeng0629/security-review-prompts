@@ -1,0 +1,11 @@
+# 本地审查产物可能包含敏感证据，不随提示词库发布。
+/reports/
+/.local/
+/.agents/
+.env
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
+.DS_Store
+Thumbs.db

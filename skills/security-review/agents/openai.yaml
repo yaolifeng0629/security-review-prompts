@@ -1,0 +1,4 @@
+interface:
+  display_name: "Security Review"
+  short_description: "Evidence-backed application and agent security reviews"
+  default_prompt: "Use $security-review to review the selected scope and report evidence-backed findings and coverage gaps."
