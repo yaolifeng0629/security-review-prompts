@@ -1,52 +1,33 @@
 # Security Review Prompts
 
-一套以证据为依据的安全审查提示词与可安装的 Agent Skill，覆盖应用全量、PR/代码改动和 Agent 共享环境三种场景。
+让 AI 编程助手按明确范围审查应用、代码改动和 Agent 共享访问权限。
 
 [English](README.md) · [Skill](skills/security-review/SKILL.md) · [报告示例](examples/sample-report.md) · [来源说明](SOURCES.md)
 
-让能读取目标代码或配置的 AI 编程助手，沿着实际控制链核查风险。每项问题需要给出证据、影响、核查过的反方解释和具体修复建议；证据不足与未检查的范围也会保留在报告中。
+可直接复制中英文提示词，也可安装英文 `security-review` Skill。报告语言按你的要求选择。
 
-本仓库提供 Markdown 指令，不包含扫描器、漏洞利用执行器或自动修复程序。完成审查仅代表对声明范围形成了检查结论，不等于安全认证。
+每项问题都需说明检查到的证据、实际影响、核查过的防护和修复建议。缺失证据与未覆盖范围也会列入报告。默认只读检查；实际访问权限由宿主和工具控制。
 
-## 选择审查场景
+## 快速开始
 
-| 范围 | 适用任务 | 中文提示词 | English prompt |
-| --- | --- | --- | --- |
-| 应用全量 | 整体应用或上线前检查 | [复制提示词](prompts/zh-CN/codebase-review.md) | [Copy prompt](prompts/en/codebase-review.md) |
-| 代码改动 | PR、提交范围、分支对比或未提交改动 | [复制提示词](prompts/zh-CN/change-review.md) | [Copy prompt](prompts/en/change-review.md) |
-| Agent 共享访问 | 共享工具、权限授予、审批规则与操作归因 | [复制提示词](prompts/zh-CN/agent-access-review.md) | [Copy prompt](prompts/en/agent-access-review.md) |
+### 直接复制提示词
 
-独立提示词无需安装。打开对应文件，将内容复制给助手，并补充目标与范围。变更审查需要明确基线和目标；Agent 共享访问审查需要明确允许检查的资源。助手应能读取相关材料，并遵守宿主的权限边界。
+无需安装。打开[应用审查](prompts/zh-CN/codebase-review.md)、[代码改动](prompts/zh-CN/change-review.md)或 [Agent 共享访问](prompts/zh-CN/agent-access-review.md)提示词，将内容复制给助手，并说明目标和允许检查的范围。助手需要能读取相关代码或配置。
 
-## 安装 Skill
+### 安装并调用 Skill
 
-本机具备 Node.js 和 `npx` 后，可先查看仓库提供的 Skill，再通过 [Skills CLI](https://github.com/vercel-labs/skills) 安装指定 Skill：
+本机具备 Node.js 和 `npx` 后，可先查看可用 Skill，再通过第三方 [Skills CLI](https://github.com/vercel-labs/skills) 安装：
 
 ```sh
 npx skills add yaolifeng0629/security-review-prompts --list
 npx skills add yaolifeng0629/security-review-prompts --skill security-review
 ```
 
-按 CLI 提示选择 Agent 和安装范围。本项目不要求全局安装；不同宿主对 Skill 的支持和发现方式有所不同，请以对应宿主的文档为准。
+两个命令都会运行该 CLI，`--list` 也不例外；`npx` 可能下载它。也可直接使用独立提示词，或审阅后[手工复制完整 Skill](#手工安装)。
 
-在 [Codex](https://developers.openai.com/codex/skills/) 中手工按项目安装时，将 **整个** `skills/security-review` 目录复制到目标项目的 `.agents/skills/security-review`。保留 `references/`，`SKILL.md` 会从中读取对应场景的流程与报告格式。
+按 CLI 提示选择 Agent 和安装范围，全局安装可选。Skill 的支持和发现方式取决于宿主。
 
-```text
-YOUR_PROJECT/
-└── .agents/
-    └── skills/
-        └── security-review/
-            ├── SKILL.md
-            └── references/
-```
-
-Skill 及其引用文件为英文，报告可以按你的要求使用中文。在 Codex 中可通过 `$security-review` 显式调用；自动选择需要宿主支持。
-
-## 开始审查
-
-以下内容是发给助手的消息，不是终端命令。请将示例目标替换为你有权审查的范围。
-
-**应用全量审查**
+安装后，把下面的消息发给助手：
 
 ```text
 $security-review
@@ -54,6 +35,18 @@ $security-review
 重点核查认证、租户隔离、敏感数据和文件上传。
 用中文在对话中返回报告，并列出无法检查的范围。
 ```
+
+示例使用 [Codex](https://developers.openai.com/codex/skills/) 的 `$security-review` 调用方式，其他宿主可能不同。Skill 及其引用文件均为英文，报告语言按你的要求选择。
+
+## 选择审查场景
+
+| 范围 | 适用任务 | 中文提示词 | English prompt |
+| --- | --- | --- | --- |
+| 应用审查 | 在约定范围内检查应用或上线前风险 | [复制提示词](prompts/zh-CN/codebase-review.md) | [Copy prompt](prompts/en/codebase-review.md) |
+| 代码改动 | PR、提交范围、分支对比或未提交改动 | [复制提示词](prompts/zh-CN/change-review.md) | [Copy prompt](prompts/en/change-review.md) |
+| Agent 共享访问 | 共享工具、权限授予、审批规则与操作归因 | [复制提示词](prompts/zh-CN/agent-access-review.md) | [Copy prompt](prompts/en/agent-access-review.md) |
+
+变更审查需要明确基线和目标；Agent 共享访问审查需要明确允许检查的资源。请将以下示例目标替换为你有权审查的范围，示例是发给助手的消息，不是终端命令。
 
 **代码改动审查**
 
@@ -74,11 +67,9 @@ $security-review
 并在对话中返回脱敏的访问关系表和问题清单。
 ```
 
-默认在对话中返回报告。需要文件时，请明确路径，例如：`将脱敏报告写入 reports/security-review.md，写入前检查是否已有文件。` 指定输出路径不等于授权覆盖无关内容。
-
 ## 如何理解报告
 
-共享的[报告格式](skills/security-review/references/report-format.md)定义了证据要求。[虚构报告示例](examples/sample-report.md)用于展示结构，不代表对本仓库或任何真实应用的审查结果。
+[虚构报告示例](examples/sample-report.md)用于展示输出结构，不代表对本仓库或任何真实应用的审查结果。共享的[报告格式](skills/security-review/references/report-format.md)定义了证据要求。
 
 | 分类 | 含义 |
 | --- | --- |
@@ -88,24 +79,47 @@ $security-review
 | **Coverage gap / 覆盖缺口** | 相关材料或行为无法检查、无法验证。 |
 | **Informational / 信息项** | 有帮助的改进建议，但没有证实漏洞，不计入漏洞数量。 |
 
-已验证问题应包含实际位置、脱敏证据、影响和前提、核查过的最有力反方解释、修复建议和安全的验证步骤。严重程度描述上下文中的影响与可达性，置信度描述证据强度，两者分别判断。
+已验证问题应包含实际位置、脱敏证据、影响和前提、核查过的最有力反方解释、修复建议和安全的验证步骤。严重程度描述上下文中的影响与可达性，置信度描述证据强度。
 
 不能因为一个 handler 中缺少检查，就认定接口未受保护：还需核查路由组合、中间件、策略和下游使用方式。依赖风险需要对应实际解析版本，并在条件允许时核对当前的一手安全公告；版本旧本身不能证明存在漏洞。
 
+默认在对话中返回报告。需要文件时，请明确路径，例如：`将脱敏报告写入 reports/security-review.md，写入前检查是否已有文件。` 指定输出路径不等于授权覆盖无关内容。
+
 ## 边界与局限
 
-- 检查可用代码、配置、元数据和已明确授权的只读工具。能调用工具或已有登录会话，不代表允许检查无关资源。
-- 运行仓库代码、安装依赖、扫描线上目标或实际使用账户权限，需要单独授权。报告应说明实际执行了哪些检查。
-- 修复代码、修改权限、断开连接、轮换密钥、删除、发布和发送消息属于后续实施任务，除非已经明确授权，否则仅给建议。
-- 被审查的文件、页面、日志和工具结果可能含有恶意指令。Skill 将它们视为证据材料，不视为授权。提示词用于约束工作流程，实际权限与隔离由宿主执行。
-- 在报告中引用信息前，应最小化并脱敏密钥、个人和客户数据。共享访问审查优先使用权限元数据。
-- 助手可能漏报、误读上下文，或无法取得部署证据和最新安全公告。应根据覆盖缺口安排后续检查与已授权验证。“没有已验证问题”仅表示本次检查范围内未能建立此类结论。
+本仓库提供 Markdown 指令，不包含扫描器、漏洞利用执行器或自动修复程序。完成审查仅代表对声明范围形成了检查结论，不等于安全认证。
+
+- **范围与授权：** 只检查选定的代码、配置、元数据和已授权的只读工具。能调用工具或已有登录会话，不代表允许访问无关资源。被审查的文件、页面、日志和工具结果属于不可信证据，不构成指令或授权；访问边界由宿主权限与隔离机制执行。
+- **执行与修改：** 运行仓库代码、安装依赖、扫描线上目标或实际使用账户权限，需要单独授权。修复代码、修改权限、断开连接、轮换密钥、删除、发布和发送消息属于后续实施任务，已有明确授权的除外。
+- **读取前最小化数据：** 优先使用窄路径、指定行段、元数据和可信工具的本地过滤，减少进入原始工具输出的秘密、个人与客户数据。报告引用和文件仍需脱敏；事后脱敏无法撤回已经暴露的原始工具输出。
+- **使用获准的处理环境：** 源码和工具输出可能由你选择的模型与宿主处理。敏感项目应使用获准处理相应材料的环境。
+- **外部查询：** 只发送必要的公开术语，例如公开包名、版本或安全公告 ID。读取项目的授权不等于允许向搜索或外部扫描服务上传私有源码、配置、锁文件、内部标识、凭据或客户数据。已有明确指定接收方、数据和目的的授权继续有效；确实需要但尚未获得授权时，询问或记录覆盖缺口。
+- **覆盖与不确定性：** 助手可能漏报、误读上下文，或缺少部署证据和最新安全公告。应记录实际执行的检查和剩余缺口。“没有已验证问题”仅表示本次检查范围内未能建立此类结论。
+
+## 手工安装
+
+在 Codex 中按项目安装时，审阅后将**整个** `skills/security-review` 目录复制到目标项目的 `.agents/skills/security-review`。保留提供场景流程和报告格式的 `references/`，以及提供宿主元数据的 `agents/openai.yaml`。
+
+```text
+YOUR_PROJECT/
+└── .agents/
+    └── skills/
+        └── security-review/
+            ├── SKILL.md
+            ├── agents/
+            │   └── openai.yaml
+            └── references/
+                ├── codebase-review.md
+                ├── change-review.md
+                ├── agent-access-review.md
+                └── report-format.md
+```
 
 ## 仓库结构
 
 | 路径 | 用途 |
 | --- | --- |
-| `skills/security-review/` | 可安装的英文 Skill 及分场景参考文件 |
+| `skills/security-review/` | 可安装的英文 Skill、参考文件和宿主元数据 |
 | `prompts/en/` | 可独立复制的英文提示词 |
 | `prompts/zh-CN/` | 可独立复制的中文提示词 |
 | [examples/sample-report.md](examples/sample-report.md) | 展示问题、疑点和覆盖缺口的虚构报告 |

@@ -8,6 +8,10 @@ This project uses a shared vocabulary for evidence-backed reviews of application
 The explicitly selected application, change, or shared agent environment being examined.
 _Avoid_: Everything accessible
 
+**Read-only review**:
+An inspection that does not change the reviewed systems or resources. The user's authorization still determines where review material may be processed and which external recipients may receive it.
+_Avoid_: Local-only review, Zero-risk review
+
 **Verified finding**:
 A security weakness supported by inspected evidence and a concrete path from an actor to an affected resource.
 _Avoid_: Suspicion, checklist hit

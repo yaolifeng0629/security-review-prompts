@@ -36,6 +36,7 @@ These links support installation or technical review concepts. They do not estab
 | --- | --- |
 | [Codex skills documentation](https://developers.openai.com/codex/skills/) | Skill directory layout, explicit invocation, and host-supported discovery |
 | [Vercel Labs Skills CLI](https://github.com/vercel-labs/skills) | Repository skill listing and selection through `add --list` and `add --skill` |
+| [npm exec documentation](https://docs.npmjs.com/cli/v11/commands/npm-exec) | Execution of npm package commands by npx, including packages fetched into the npm cache |
 | [OWASP Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html) | Distinguishing password hashing from reversible storage of recoverable data |
 | [OWASP CSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html) | Context-dependent review of authenticated browser requests and CSRF defenses |
 
